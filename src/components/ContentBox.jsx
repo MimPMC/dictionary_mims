@@ -6,8 +6,6 @@ import WordCard from "./WordCard";
 
 export default function ContentBox() {
   const { searchTerm, foundWord } = useSearch();
-
-
   return (
     <Container sx={{ my: 2 }}>
       <Paper width="100%" elevation={1} sx={{ display: 'flex', flexDirection: 'column' }}>

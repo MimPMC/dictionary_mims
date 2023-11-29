@@ -1,39 +1,37 @@
 /* eslint-disable react/prop-types */
-import SearchIcon from '@mui/icons-material/Search';
-import { IconButton, InputAdornment, TextField } from '@mui/material';
-import axios from 'axios';
-import { useState } from 'react';
-import { useSearch } from './SearchContext';
+import SearchIcon from "@mui/icons-material/Search";
+import { IconButton, InputAdornment, TextField } from "@mui/material";
+import axios from "axios";
+import { useState } from "react";
+import { useSearch } from "./SearchContext";
 
-export const MySearchBar = ({ onSearch }) => {
+export const MySearchBar = () => {
   const { searchTerm, updateSearchTerm, updateFoundWord } = useSearch();
-  const [errorStatus, setErrorStatus] = useState('');
+  const [errorStatus, setErrorStatus] = useState("");
 
+  //Sökfunktionen, triggas när du klickar enter eller på sökikonen.
   const handleSearch = async () => {
+    //Om sökfält är tom, visa ett errormeddelande.
     if (!searchTerm.trim()) {
-      setErrorStatus('Please enter a search term.');
+      setErrorStatus("Please enter a search term.");
       return;
     }
-
     try {
-      // Make API call to get word definitions
-      const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${searchTerm}`);
-
-      // Check if the response contains word definitions
+      // Kallar API efter det sökta ordet.
+      const response = await axios.get(
+        `https://api.dictionaryapi.dev/api/v2/entries/en/${searchTerm}`
+      );
+      // Kollar om svaret innehåller ett definition av ett ord.
       if (response.data && response.data.length > 0) {
-        setErrorStatus('');
+        setErrorStatus("");
 
-        // Extract relevant information from the API response
-        const wordData = response.data[0]; // Assuming there is only one word in the response
+        //Tar datan från det första ordet i responsen
+        const wordData = response.data[0];
 
-        // Update foundWord in the context
+        // Uppdatera foundWord i contexten.
         updateFoundWord(wordData);
-
-        // Perform further actions with the wordData, e.g., update UI
-        if (onSearch) {
-          onSearch(wordData);
-        }
       } else {
+        //sätt error att ordet inte hittas
         setErrorStatus(`No definitions found for '${searchTerm}'.`);
       }
     } catch (error) {
@@ -41,33 +39,43 @@ export const MySearchBar = ({ onSearch }) => {
         // Handle 404 (Not Found) error, indicating that the word was not found
         setErrorStatus(`No definitions found for '${searchTerm}'.`);
       } else {
-        setErrorStatus('Error fetching word definitions. Please try again later.');
-        console.error('Error fetching word definitions:', error.message);
+        // Om något annat går fel visas detta felet.
+        setErrorStatus(
+          "Error fetching word definitions. Please try again later."
+        );
+        console.error("Error fetching word definitions:", error.message);
       }
     }
-  }; // Missing closing parenthesis
+  };
 
   return (
-    <TextField
-      placeholder="Search for a word..."
-      variant="outlined"
-      fullWidth
-      value={searchTerm}
-      onChange={(e) => {
-        updateSearchTerm(e.target.value);
-        setErrorStatus(''); // Clear error status when the user types
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSearch();
       }}
-      error={!!errorStatus}
-      helperText={errorStatus}
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            <IconButton onClick={handleSearch} aria-label="search" color="primary">
-              <SearchIcon />
-            </IconButton>
-          </InputAdornment>
-        ),
-      }}
-    />
+    >
+      <TextField
+        placeholder="Search for a word..."
+        variant="outlined"
+        fullWidth
+        value={searchTerm}
+        onChange={(e) => {
+          updateSearchTerm(e.target.value);
+          setErrorStatus(""); // Clear error status when the user types
+        }}
+        error={!!errorStatus}
+        helperText={errorStatus}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton aria-label="search" color="primary" type="submit">
+                <SearchIcon />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+    </form>
   );
 };
