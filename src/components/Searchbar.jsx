@@ -36,7 +36,7 @@ export const MySearchBar = () => {
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        // Handle 404 (Not Found) error, indicating that the word was not found
+       //sätt error att ordet inte hittas
         setErrorStatus(`No definitions found for '${searchTerm}'.`);
       } else {
         // Om något annat går fel visas detta felet.
@@ -79,3 +79,4 @@ export const MySearchBar = () => {
     </form>
   );
 };
+

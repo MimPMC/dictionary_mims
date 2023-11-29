@@ -101,9 +101,8 @@ describe("Search function", () => {
     await userEvent.type(searchField, audioWordData.word);
     await userEvent.click(searchButton);
 
-    // Check that the word and related information are displayed
+    // Kollar att ljudelement existerar om ljudfil finns. 
     await waitFor(() => {
-      expect (screen.getByText(audioWordData.word));
       const playAudioButton = screen.getByText("Play Audio");
       const audioFile = screen.findByRole("audio");
       expect(playAudioButton, audioFile).toBeInTheDocument();

@@ -6,6 +6,7 @@ import WordCard from "./WordCard";
 
 export default function ContentBox() {
   const { searchTerm, foundWord } = useSearch();
+  // Wordcard visas endast när söktermen och foundword är detsamma, så om du börjar radera textene försvinner kortet.
   return (
     <Container sx={{ my: 2 }}>
       <Paper width="100%" elevation={1} sx={{ display: 'flex', flexDirection: 'column' }}>
