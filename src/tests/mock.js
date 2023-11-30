@@ -1,4 +1,4 @@
-//data med liknande struktur som api responsen
+//data med liknande struktur som api responsen som används i testerna. en med ljudfil och en utan. 
 
 export const mockWordData = {
   word: "cellphone",

@@ -11,6 +11,8 @@ import Typography from "@mui/material/Typography";
 import React, { useRef, useState } from "react";
 import { useFavorites } from "./FavContext";
 
+
+//Stjärnknapp som uppdateras beroende på om ordet  finns i favoritlistan. 
 const StarButton = ({ isFavorite, onClick }) => {
   return (
     <Button
@@ -21,8 +23,8 @@ const StarButton = ({ isFavorite, onClick }) => {
       startIcon={<StarIcon color={isFavorite ? "secondary" : "action"} />}
        sx={{
     fontSize: {
-      xs: 9,  // Font size for extra-small screens
-      sm: 12, // Font size for medium screens and larger
+      xs: 9, 
+      sm: 12, 
     },
   }}
     >

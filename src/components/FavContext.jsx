@@ -4,6 +4,8 @@ import { useLocalStorageState } from "../hooks/UseLocalStorage";
 
 const FavoritesContext = createContext();
 
+//Favoritcontext , används för att hämta fovoritlista, eller lägga till/ ta bort ord ur listan. 
+
 export const FavoritesProvider = ({ children }) => {
   const [favoriteWords, setFavoriteWords] = useLocalStorageState([],"fav");
 

@@ -5,6 +5,8 @@ import Switch from '@mui/material/Switch';
 import { styled } from '@mui/material/styles';
 
 
+//Custom Dark/lighmode switch som byter tema.
+
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 60,
   height: 34,
