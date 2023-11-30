@@ -17,6 +17,7 @@ export const SearchProvider = ({ children }) => {
 
   const updateFoundWord = (wordData) => {
     setFoundWord(wordData);
+    console.log(foundWord)
   };
 
   const contextValue = {

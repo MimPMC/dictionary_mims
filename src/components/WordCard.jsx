@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/prop-types */
+import StarIcon from '@mui/icons-material/Star';
 import VolumeUpIcon from "@mui/icons-material/VolumeUp"; // Import MUI audio icon
 import { Box, List, ListItem, Stack } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -7,13 +8,43 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import { useFavorites } from "./FavContext";
+
+const StarButton = ({ isFavorite, onClick }) => {
+  return (
+    <Button
+      type="button"
+      size="small"
+      color='primary'
+      onClick={onClick}
+      startIcon={<StarIcon color={isFavorite ? "secondary" : "action"} />}
+       sx={{
+    fontSize: {
+      xs: 9,  // Font size for extra-small screens
+      sm: 12, // Font size for medium screens and larger
+    },
+  }}
+    >
+      {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+    </Button>
+  );
+};
 
 export default function WordCard({ word }) {
-  // Kollar så att det finns ett ord att visa
+   const { favoriteWords, addFavoriteWord, removeFavoriteWord } = useFavorites();
+  const [isFavorite, setIsFavorite] = useState(favoriteWords.includes(word.word));
   if (!word) {
     return null;
   }
+   const toggleFavorite = () => {
+    if (isFavorite) {
+      removeFavoriteWord(word.word);
+    } else {
+      addFavoriteWord(word.word);
+    }
+    setIsFavorite(!isFavorite);
+  };
 
   /* Funktion körs när spela upp ljud knappen klickas på. Den kollar om det finns en ljudfil, och spelar upp i så fall.*/
   const playAudio = (audioUrl) => {
@@ -31,45 +62,59 @@ export default function WordCard({ word }) {
   const audioRef = useRef(null);
 
   return (
-    <Card>
+    <Card elevation={4}>
       <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
           Word found:
         </Typography>
-        <Typography variant="h5">{word.word}</Typography>
-        <Stack direction="row" spacing={3} alignItems="center">
-          {word.phonetic ? (
-            <Typography variant="subtitle2" color="text.secondary">
-              {word.phonetic}
-            </Typography>
-          ) : null}
-          {/* Ljudknapp som endast syns om en ljudfil existerar.*/}
-          {word.phonetics &&
-            word.phonetics.length > 0 &&
-            word.phonetics[0].audio && (
-              <CardActions>
-                <Button
-                  type="button"
-                  size="small"
-                  onClick={() => playAudio(word.phonetics[0].audio)}
-                  startIcon={<VolumeUpIcon />} // Add MUI audio icon
-                >
-                  Play Audio
-                </Button>
-              </CardActions>
-            )}
+           <StarButton isFavorite={isFavorite} onClick={toggleFavorite} />
         </Stack>
+        
+        <Typography variant="h5" gutterBottom>
+          {word.word}
+        </Typography>
+       
+         {/* visa endast om fonetitisk skrift eller ljud finns.*/}
+        {word.phonetic ? (
+          <Stack my={1}>
+            <Typography variant="subtitle2" color="primary">
+              Pronountiaction:
+            </Typography>
+            <Stack direction="row" spacing={3} alignItems="center">
+              <Typography variant="subtitle2" color="text.secondary">
+                {word.phonetic}
+              </Typography>
+              {/* Ljudknapp som endast syns om en ljudfil existerar.*/}
+              {word.phonetics &&
+                word.phonetics.length > 0 &&
+                word.phonetics[0].audio && (
+                  <CardActions>
+                    <Button
+                      type="button"
+                      size="small"
+                      onClick={() => playAudio(word.phonetics[0].audio)}
+                      startIcon={<VolumeUpIcon />} // Add MUI audio icon
+                    >
+                      Play Audio
+                    </Button>
+                  </CardActions>
+                )}
+            </Stack>
+          </Stack>
+        ) : null}
         {/* Här mappas först alla olika sorters meningar, därefter alla versioner som finns i varje ords mening.*/}
         <Box sx={{ mb: 1.5 }} color="text.secondary">
           {word.meanings.map((meaning, index) => (
             <React.Fragment key={index}>
-              <Typography variant="subtitle1">
-                {meaning.partOfSpeech}
+              <Typography variant="subtitle1" color="primary">
+                {meaning.partOfSpeech.charAt(0).toUpperCase() +
+                  meaning.partOfSpeech.slice(1)}
               </Typography>
               <List>
                 {meaning.definitions.map((definition, i) => (
                   <ListItem key={i}>
-                    <Typography variant="body2">
+                    <Typography variant="body2" fontSize={14}>
                       {`${i + 1}. ${definition.definition}`}
                     </Typography>
                   </ListItem>
