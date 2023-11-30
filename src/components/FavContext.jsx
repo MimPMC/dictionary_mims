@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
+import { useLocalStorageState } from "../hooks/UseLocalStorage";
 
 const FavoritesContext = createContext();
 
 export const FavoritesProvider = ({ children }) => {
-  const [favoriteWords, setFavoriteWords] = useState([]);
+  const [favoriteWords, setFavoriteWords] = useLocalStorageState([],"fav");
 
   const addFavoriteWord = (word) => {
     setFavoriteWords((prevWords) => [...prevWords, word]);

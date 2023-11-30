@@ -15,7 +15,7 @@ export default function Header({ toggleTheme }) {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Container>
+          <Container maxWidth="md">
             <Stack direction="row" justifyContent="space-between" alignItems="center" width="100%">
               <Stack direction="row" justifyContent="center">
                 <Stack direction="row" alignItems="center">
